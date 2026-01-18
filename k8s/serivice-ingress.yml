@@ -1,22 +1,22 @@
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: movie-app-ingress
   namespace: default
   annotations:
-   nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
     - host: a6691a6983f224c9480c1cf3cc8de029-a11424bcf4645132.elb.eu-north-1.amazonaws.com
       http:
         paths:
-          - path: /movie-app-service
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: movie-app-service
                 port:
                   number: 80
-
-
