@@ -67,7 +67,7 @@ pipeline {
                             git add k8s/deployment.yml
                             git diff --cached --quiet || git commit -m "update image to ${IMAGE_TAG}"
 
-                            git push https://https://github.com/nikhil23407/PG-multi-branch.git main
+                            git push https://github.com/nikhil23407/PG-multi-branch.g main
                         """
                     }
                 }
