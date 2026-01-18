@@ -7,11 +7,15 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - movies.example.com
+      secretName: movies-tls-secret
   rules:
-    - host: a6691a6983f224c9480c1cf3cc8de029-a11424bcf4645132.elb.eu-north-1.amazonaws.com
+    - host: movies.example.com
       http:
         paths:
-          - path: /movie-app-service
+          - path: /
             pathType: Prefix
             backend:
               service:
