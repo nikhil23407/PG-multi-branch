@@ -1,21 +1,22 @@
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: grafana-ingress
   namespace: monitoring
   annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
-    - host: grafana.example.com
+    - host: a6691a6983f224c9480c1cf3cc8de029-a11424bcf4645132.elb.eu-north-1.amazonaws.com
       http:
         paths:
-          - path: /grafana(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /grafana
+            pathType: Prefix
             backend:
               service:
                 name: monitoring-grafana
                 port:
                   number: 80
+
