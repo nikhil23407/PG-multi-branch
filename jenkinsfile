@@ -60,6 +60,7 @@ pipeline {
                             git config user.email "${GIT_EMAIL}"
 
                             git checkout main
+                            git config pull.rebase false   # ensure merge strategy
                             git pull origin main
 
                             sed -i 's|image:.*|image: ${FULL_IMAGE}|' k8s/deployment.yml
