@@ -24,7 +24,7 @@ pipeline {
 
             steps {
                 script {
-                    env.IMAGE_TAG = "build-${BUILD_NUMBER}"
+                    env.IMAGE_TAG  = "build-${BUILD_NUMBER}"
                     env.FULL_IMAGE = "${IMAGE_REPO}:${env.IMAGE_TAG}"
                 }
 
@@ -35,8 +35,14 @@ pipeline {
                 )]) {
                     sh """
                         set -e
+
+                        echo "✅ Building image: ${FULL_IMAGE}"
                         docker build -t ${FULL_IMAGE} .
+
+                        echo "✅ Login to DockerHub"
                         echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+
+                        echo "✅ Pushing image: ${FULL_IMAGE}"
                         docker push ${FULL_IMAGE}
                     """
                 }
@@ -56,19 +62,33 @@ pipeline {
                         sh """
                             set -e
 
+                            echo "✅ Configuring git user"
                             git config user.name "${GIT_USER}"
                             git config user.email "${GIT_EMAIL}"
 
+                            echo "✅ Set origin remote (no token in URL)"
+                            git remote set-url origin https://github.com/nikhil23407/PG-multi-branch.git
+
+                            echo "✅ Store token safely for this pipeline run"
+                            git config credential.helper store
+                            echo "https://${GIT_USERNAME}:${GIT_TOKEN}@github.com" > ~/.git-credentials
+
+                            echo "✅ Pull latest main branch"
                             git checkout main
-                            git config pull.rebase false   # ensure merge strategy
                             git pull origin main
 
+                            echo "✅ Updating deployment image to: ${FULL_IMAGE}"
                             sed -i 's|image:.*|image: ${FULL_IMAGE}|' k8s/deployment.yml
 
+                            echo "✅ Git add + commit changes"
                             git add k8s/deployment.yml
                             git diff --cached --quiet || git commit -m "update image to ${IMAGE_TAG}"
 
-                            git push https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/nikhil23407/PG-multi-branch.git main
+                            echo "✅ Pushing to GitHub"
+                            git push origin main
+
+                            echo "✅ Cleanup credentials"
+                            rm -f ~/.git-credentials
                         """
                     }
                 }
