@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: movie-app
-          image: nikhil23407/movie-app:build-22
+          image: nikhil23407/movie-app:build-23
           ports:
             - containerPort: 5000
 
