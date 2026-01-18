@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: movie.example.com   # Replace with your domain or ELB DNS
+    - host: a6691a6983f224c9480c1cf3cc8de029-a11424bcf4645132.elb.eu-north-1.amazonaws.com
       http:
         paths:
           - path: /
