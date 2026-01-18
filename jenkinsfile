@@ -60,6 +60,7 @@ pipeline {
                             git config user.email "${GIT_EMAIL}"
 
                             git checkout main
+                            git config pull.rebase false   # ensure merge strategy
                             git pull origin main
 
                             sed -i 's|image:.*|image: ${FULL_IMAGE}|' k8s/deployment.yml
@@ -67,7 +68,7 @@ pipeline {
                             git add k8s/deployment.yml
                             git diff --cached --quiet || git commit -m "update image to ${IMAGE_TAG}"
 
-                            git push https://github.com/nikhil23407/PG-multi-branch.g main
+                            git push https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/nikhil23407/PG-multi-branch.git main
                         """
                     }
                 }
